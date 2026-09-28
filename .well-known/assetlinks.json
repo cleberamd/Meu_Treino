@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.vercel.treino_ashy_seven.twa",
+        "sha256_cert_fingerprints": ["60:EB:55:98:EE:86:E5:EC:B1:41:77:56:3A:60:52:C7:C6:2B:2C:39:2D:FA:1D:CC:76:A7:66:CA:54:93:6E:1F"]
+      }
+    }]
