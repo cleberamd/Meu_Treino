@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <title>5 Essenciais — Treino & Saúde</title>
+
+  <!-- Manifest completo compatível com PWABuilder -->
+  <link rel="manifest" href="manifest.json">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <style>
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif
+    }
+
+    header {
+      background: #111827;
+      color: #fff;
+      padding: 16px;
+      padding-top: calc(16px + env(safe-area-inset-top, 0px));
+      position: sticky;
+      top: 0;
+      z-index: 3
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px
+    }
+
+    header small {
+      color: #cbd5e1;
+      display: block;
+      margin-top: 4px
+    }
+
+    main {
+      max-width: 680px;
+      margin: auto;
+      padding: 14px 14px calc(95px + env(safe-area-inset-bottom, 0px))
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 10px #0000000b
+    }
+
+    h2 {
+      font-size: 18px;
+      margin: 0 0 10px
+    }
+
+    .muted {
+      color: #64748b;
+      font-size: 13px
+    }
+
+    .hero {
+      text-align: center
+    }
+
+    .phase {
+      font-size: 14px;
+      font-weight: 700;
+      color: #475569
+    }
+
+    .big {
+      font-size: 52px;
+      line-height: 1.05;
+      font-weight: 800;
+      margin: 5px 0
+    }
+
+    .progress {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 99px;
+      overflow: hidden
+    }
+
+    .bar {
+      height: 100%;
+      width: 0;
+      background: #10b981;
+      transition: .3s
+    }
+
+    .exercise {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 11px 0
+    }
+
+    .exercise:last-child {
+      border: 0
+    }
+
+    .exercise b {
+      display: block
+    }
+
+    .exercise span {
+      color: #64748b;
+      font-size: 13px
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 14px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer
+    }
+
+    .primary {
+      background: #10b981;
+      color: #fff;
+      width: 100%
+    }
+
+    .secondary {
+      background: #e2e8f0;
+      color: #0f172a
+    }
+
+    .danger {
+      background: #fee2e2;
+      color: #991b1b;
+      width: 100%
+    }
+
+    .row {
+      display: flex;
+      gap: 8px
+    }
+
+    .row button {
+      flex: 1
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 16px
+    }
+
+    .stat {
+      display: inline-block;
+      width: 48%;
+      padding: 8px 0
+    }
+
+    .stat b {
+      display: block;
+      font-size: 20px
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      z-index: 5;
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    nav button {
+      flex: 1;
+      background: #fff;
+      border-radius: 0;
+      font-size: 12px;
+      padding: 10px 4px
+    }
+
+    .current {
+      border: 2px solid #10b981;
+      border-radius: 12px;
+      padding: 10px !important
+    }
+
+    .center {
+      text-align: center
+    }
+
+    .tips {
+      line-height: 1.55
+    }
+
+    .trend-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 7px 0;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 13px;
+    }
+    .trend-line:last-child { border-bottom: 0; }
+    .trend-ok { color: #059669; font-weight: 700; }
+    .trend-neutral { color: #475569; font-weight: 700; }
+
+    .history p {
+      border-bottom: 1px solid #e2e8f0;
+      padding: 8px 0;
+      margin: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background 0.2s, transform 0.2s
+    }
+
+    .history p.pressing {
+      background: #fee2e2;
+      transform: scale(0.97);
+      border-radius: 8px
+    }
+
+    .history .hint-longpress {
+      color: #94a3b8;
+      font-size: 11px;
+      text-align: center;
+      margin-top: 6px;
+      font-style: italic
+    }
+
+    @keyframes alertaFinal {
+      0% {
+        background: #fef3c7
+      }
+
+      50% {
+        background: #fca5a5
+      }
+
+      100% {
+        background: #fff
+      }
+    }
+
+    .fim-tempo {
+      animation: alertaFinal 0.6s ease-in-out 3
+    }
+
+    .detalhe {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #374151;
+      margin-top: 8px;
+      background: #f9fafb;
+      padding: 8px;
+      border-radius: 8px
+    }
+
+    #blackOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      cursor: pointer;
+      user-select: none
+    }
+
+    .big-clock-econ {
+      font-size: clamp(96px, 24vw, 150px);
+      font-weight: 900;
+      color: #10b981;
+      font-family: monospace, system-ui;
+      line-height: 1;
+      margin: 12px 0
+    }
+
+    .title-econ {
+      color: #cbd5e1;
+      font-size: 22px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      text-align: center;
+      padding: 0 20px
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 360px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      animation: modalPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes modalPop {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-text {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 16px;
+      font-size: 16px;
+      border-radius: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-modal-ok {
+      background: #10b981;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-modal-cancel {
+      background: #e2e8f0;
+      color: #475569;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="customModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div id="modalText" class="modal-text"></div>
+      <div id="modalButtons" class="modal-buttons"></div>
+    </div>
+  </div>
+
+  <!-- Modal Config Treino -->
+  <div id="modalConfigTreino" class="modal-overlay hidden">
+    <div class="modal-card" style="max-height:80vh; overflow-y:auto; text-align:left;">
+      <h2 style="margin-top:0; text-align:center;">⚙️ Configurar Treinos</h2>
+      <div id="configFields"></div>
+      <div class="modal-buttons" style="margin-top:20px;">
+        <button class="btn-modal-cancel" onclick="fecharConfig()">Cancelar</button>
+        <button class="btn-modal-ok" onclick="salvarConfig()">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <!-- Backup Modal -->
+  <div id="backupModal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-text">📦 Backup & Restauração</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <button class="btn-modal-ok"
+          style="width:100%; padding:16px; font-size:16px; border-radius:14px; font-weight:800; border:none; cursor:pointer;"
+          onclick="exportarBackup()">💾 Exportar Backup</button>
+        <button class="btn-modal-ok"
+          style="width:100%; padding:16px; font-size:16px; border-radius:14px; font-weight:800; border:none; cursor:pointer; background:#3b82f6;"
+          onclick="document.getElementById('fileInput').click()">📂 Importar Backup</button>
+        <button class="btn-modal-cancel"
+          style="width:100%; padding:16px; font-size:16px; border-radius:14px; font-weight:800; border:none; cursor:pointer;"
+          onclick="fecharBackupModal()">✖ Cancelar</button>
+      </div>
+    </div>
+  </div>
+  <input type="file" id="fileInput" accept=".json" style="display:none" onchange="importarBackup(event)">
+
+  <div id="blackOverlay" class="hidden" onclick="desativarModoEcon()">
+    <div id="titleEcon" class="title-econ">Exercício</div>
+    <div id="clockOverlay" class="big-clock-econ">00:00</div>
+    <small style="color:#64748b; margin-top:20px; font-size:14px;">👆 Toque em qualquer lugar para voltar</small>
+  </div>
+
+  <header>
+    <h1>💪 Os 5 Essenciais</h1>
+    <small id="headerStats">🦵Agach 💪Flex 🏋️Rem 🧱Pran 🚴Bike HIIT</small>
+  </header>
+  <main>
+    <section id="home">
+      <div class="card hero">
+        <div class="muted">TREINO DE HOJE</div>
+        <h2 id="today"></h2>
+        <p id="todayDesc" class="muted"></p>
+        <button class="primary" onclick="start()">▶ COMEÇAR TREINO</button>
+      </div>
+      <div class="card">
+        <h2>🎯 Evolução</h2>
+        <div class="stat">Peso<b id="hv">90 kg</b></div>
+        <div class="stat">Cintura<b id="hc">105 cm</b></div>
+        <div class="progress">
+          <div class="bar" id="goalbar"></div>
+        </div>
+        <p class="muted">Meta Etapa 1: 85 kg / ~96 cm | Déficit Sustentável</p>
+        <p class="muted">📌 Compare as medições nas mesmas condições para acompanhar a tendência.</p>
+      </div>
+      <div class="card">
+        <h2>💧 Hidratação de Hoje</h2>
+        <div class="stat">Consumida<b id="homeWater">0 L</b></div>
+        <div class="stat">Meta automática<b id="homeWaterGoal">0 L</b></div>
+        <div class="progress" style="margin-top:8px;"><div class="bar" id="homeWaterBar"></div></div>
+        <p id="homeWaterText" class="muted" style="margin-top:8px;"></p>
+      </div>
+      <div class="card">
+        <h2>📈 Tendência</h2>
+        <div id="homeTrend" class="tips"></div>
+      </div>
+      <div class="card">
+        <h2>📅 Rotina da Semana</h2>
+        <div id="week"></div>
+      </div>
+      <div class="card">
+        <h2 style="display:flex; justify-content:space-between; align-items:center; margin:0 0 10px 0;">🏆 Os 5 Pilares
+          <button onclick="abrirConfig()"
+            style="background:none; border:none; padding:4px; font-size:20px; cursor:pointer;"
+            title="Editar Treinos">⚙️</button>
+        </h2>
+        <div class="exercise" onclick="startSingle('agachamento')" style="cursor:pointer"><b>🦵 Agachamento</b><span
+            id="lbl-agachamento">3×12</span></div>
+        <div class="exercise" onclick="startSingle('flexao')" style="cursor:pointer"><b>💪 Flexão</b><span
+            id="lbl-flexao">3×10</span></div>
+        <div class="exercise" onclick="startSingle('remada')" style="cursor:pointer"><b>🏋️ Remada</b><span
+            id="lbl-remada">3×12/lado</span></div>
+        <div class="exercise" onclick="startSingle('prancha')" style="cursor:pointer"><b>🧱 Prancha</b><span
+            id="lbl-prancha">3×40s</span></div>
+        <div class="exercise" onclick="startSingle('bike')" style="cursor:pointer"><b>🚴 Bike HIIT</b><span
+            id="lbl-bike">10x (30s Tiro / 60s Leve)</span></div>
+      </div>
+    </section>
+
+    <section id="guided" class="hidden">
+      <div class="card" id="cardTreino">
+        <div class="phase" id="phase"></div>
+        <div class="big" id="clock">00:00</div>
+        <div class="progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <h2 id="currentTitle" class="center">Preparar</h2>
+        <p id="currentInfo" class="muted center"></p>
+        <p id="detalheTexto" class="detalhe center"></p>
+        <p id="avisoProx" class="center"
+          style="color:#e11d48; font-weight:bold; font-size:16px; margin-top:8px; display:none;"></p>
+        <div class="row">
+          <button class="secondary" onclick="pause()">⏸️ Pausar</button>
+          <button class="primary" id="btnProx" onclick="next()">▶ PRÓXIMO</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>📋 Próximos</h2>
+        <div id="queue"></div>
+      </div>
+      <button class="danger" onclick="finish()">⏹ Encerrar</button>
+    </section>
+
+    <section id="progress" class="hidden">
+      <div class="card">
+        <h2>📊 Registrar Medidas</h2>
+        <div class="row"><input id="weight" type="number" step=".1" placeholder="Peso kg"><input id="waist"
+            type="number" step=".1" placeholder="Cintura cm"></div>
+        <br>
+        <button class="primary" onclick="saveMeasure()">Salvar Medidas</button>
+      </div>
+
+      <div class="card">
+        <h2>📄 Relatório Completo por Data</h2>
+        <p class="muted">Filtre por um dia específico para ver treinos, água, cerveja e medidas consolidadas.</p>
+        <div class="row">
+          <input id="reportDate" type="date" onchange="gerarRelatorio()">
+          <button class="secondary" onclick="limparFiltroRelatorio()" style="max-width:110px;">Ver Todos</button>
+        </div>
+        <br>
+        <div id="relatorioResultado"></div>
+        <br>
+        <button class="secondary" style="width:100%;" onclick="copiarRelatorio()">📋 Copiar Relatório Formatado</button>
+      </div>
+
+      <div class="card history">
+        <h2>🏆 Treinos Concluídos (Últimos 3)</h2>
+        <div id="histTreinos"></div>
+      </div>
+
+      <div class="card history">
+        <h2>📏 Histórico de Medidas (Últimas 3)</h2>
+        <div id="hist"></div>
+      </div>
+    </section>
+
+    <section id="habits" class="hidden">
+      <div class="card">
+        <h2>🍽️ Hábitos de Hoje</h2>
+        <p class="muted">A meta de água é calculada automaticamente pelo peso e pelo treino do dia.</p>
+
+        <label><b id="waterGoalLabel">💧 Água (Litros) — Meta: 3,5L</b></label>
+        <div style="margin-top:6px; margin-bottom:8px;">
+          <input id="water" type="number" step="0.05" placeholder="Total acumulado em Litros">
+        </div>
+        <div class="row" style="margin-bottom:18px;">
+          <button class="secondary" onclick="addAgua(0.25)">+250ml</button>
+          <button class="secondary" onclick="addAgua(0.5)">+500ml</button>
+          <button class="secondary" onclick="addAgua(1.0)">+1 Litro</button>
+        </div>
+
+        <label><b>🍺 Cervejas</b></label>
+        <div style="margin-top:6px; margin-bottom:8px;">
+          <input id="alcohol" type="number" min="0" step="1" placeholder="Total de cervejas">
+        </div>
+        <div class="row" style="margin-bottom:18px;">
+          <button class="secondary" onclick="addCerveja(1)">+1 Cerveja 🍺</button>
+          <button class="secondary" style="background:#fee2e2; color:#991b1b; max-width:80px;"
+            onclick="addCerveja(-1)">-1</button>
+        </div>
+
+        <label><input id="fast" type="checkbox" checked onchange="saveHabits(true)"> 🚴 Bike em jejum
+          hoje</label><br><br>
+
+        <button class="primary" onclick="saveHabits()">✅ Salvar Todos os Hábitos</button>
+      </div>
+
+      <div class="card history">
+        <h2>📅 Histórico de Hábitos (Últimos 3)</h2>
+        <div id="histHabits"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <button onclick="show('home')">🏠<br>Início</button>
+    <button onclick="show('guided')">🏋️<br>Treino</button>
+    <button onclick="show('progress')">📊<br>Evolução</button>
+    <button onclick="show('habits')">🍽️<br>Hábitos</button>
+    <button onclick="mostrarBackupModal()">🔄<br>Backup</button>
+  </nav>
+
+  <script>
+    /* --- REGISTRO AUTOMÁTICO DO SERVICE WORKER PARA NOTIFICAÇÕES NATIVAS --- */
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => { });
+    }
+
+    const D = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    const SOM_ATIVADO = true;
+    let wakeLock = null;
+    let idleTimer = null;
+    let lastBipSec = -1;
+    window.ultimoRelatorioTexto = "";
+
+    function getSettings() {
+      let def = {
+        agachamento: { s: 3, r: 12, t: 40, d: 45 },
+        flexao: { s: 3, r: 10, t: 40, d: 45 },
+        remada: { s: 3, r: 12, t: 50, d: 45 },
+        prancha: { s: 3, r: 40, t: 40, d: 40 },
+        bike: { s: 10, t: 30, l: 60 }
+      };
+      let saved = JSON.parse(localStorage.getItem('workout_config') || '{}');
+      for (let k in saved) { if (def[k]) Object.assign(def[k], saved[k]); }
+      return def;
+    }
+
+    function abrirConfig() {
+      let cfg = getSettings();
+      let html = '';
+      let exercises = {
+        agachamento: '🦵 Agachamento', flexao: '💪 Flexão',
+        remada: '🏋️ Remada', prancha: '🧱 Prancha', bike: '🚴 Bike HIIT'
+      };
+
+      for (let k in exercises) {
+        let c = cfg[k];
+        let semReps = (k === 'bike' || k === 'prancha');
+
+        html += `<div style="margin-bottom:15px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+          <b>${exercises[k]}</b>
+          <div class="row" style="margin-top:5px;">
+            <input type="number" id="cfg_${k}_s" value="${c.s}" placeholder="Séries" title="Séries">
+            ${!semReps ? `<input type="number" id="cfg_${k}_r" value="${c.r}" placeholder="Reps/s" title="Repetições">` : ''}
+          </div>
+          <div class="row" style="margin-top:5px;">
+            <input type="number" id="cfg_${k}_t" value="${c.t}" placeholder="Trabalho (s)" title="Tempo de Trabalho (s)">
+            <input type="number" id="cfg_${k}_${k === 'bike' ? 'l' : 'd'}" value="${k === 'bike' ? c.l : c.d}" placeholder="Descanso (s)" title="Tempo de Descanso (s)">
+          </div>
+        </div>`;
+      }
+      document.getElementById('configFields').innerHTML = html;
+      document.getElementById('modalConfigTreino').classList.remove('hidden');
+    }
+    function fecharConfig() { document.getElementById('modalConfigTreino').classList.add('hidden'); }
+
+    function salvarConfig() {
+      let cfg = getSettings();
+      let exercises = ['agachamento', 'flexao', 'remada', 'prancha', 'bike'];
+      for (let k of exercises) {
+        cfg[k].s = +document.getElementById(`cfg_${k}_s`).value;
+        cfg[k].t = +document.getElementById(`cfg_${k}_t`).value;
+        if (k === 'bike') {
+          cfg[k].l = +document.getElementById(`cfg_bike_l`).value;
+        } else {
+          if (k !== 'prancha') {
+            cfg[k].r = +document.getElementById(`cfg_${k}_r`).value;
+          }
+          cfg[k].d = +document.getElementById(`cfg_${k}_d`).value;
+        }
+      }
+      localStorage.setItem('workout_config', JSON.stringify(cfg));
+      fecharConfig();
+      atualizarListaPilares();
+      mostrarAviso('✅ Configurações salvas!');
+    }
+
+    function atualizarListaPilares() {
+      let cfg = getSettings();
+      let elAg = document.getElementById('lbl-agachamento'); if (elAg) elAg.textContent = `${cfg.agachamento.s}×${cfg.agachamento.r}`;
+      let elFl = document.getElementById('lbl-flexao'); if (elFl) elFl.textContent = `${cfg.flexao.s}×${cfg.flexao.r}`;
+      let elRe = document.getElementById('lbl-remada'); if (elRe) elRe.textContent = `${cfg.remada.s}×${cfg.remada.r}/lado`;
+      let elPr = document.getElementById('lbl-prancha'); if (elPr) elPr.textContent = `${cfg.prancha.s}×${cfg.prancha.t}s`;
+      let elBi = document.getElementById('lbl-bike'); if (elBi) elBi.textContent = `${cfg.bike.s}x (${cfg.bike.t}s Tiro / ${cfg.bike.l}s Leve)`;
+    }
+
+
+    function mostrarAviso(msg) {
+      document.getElementById('modalText').textContent = msg;
+      document.getElementById('modalButtons').innerHTML = `<button class="btn-modal-ok" onclick="fecharModal()">OK</button>`;
+      document.getElementById('customModal').classList.remove('hidden');
+    }
+
+    function mostrarConfirmacao(msg, onConfirm) {
+      document.getElementById('modalText').textContent = msg;
+      document.getElementById('modalButtons').innerHTML = `
+    <button class="btn-modal-cancel" onclick="fecharModal()">Cancelar</button>
+    <button class="btn-modal-ok" id="btnModalConfirm">OK</button>
+  `;
+      document.getElementById('btnModalConfirm').onclick = () => { fecharModal(); onConfirm(); };
+      document.getElementById('customModal').classList.remove('hidden');
+    }
+
+    function fecharModal() { document.getElementById('customModal').classList.add('hidden'); }
+
+    async function solicitarWakeLock() {
+      if ('wakeLock' in navigator) { try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) { } }
+    }
+
+    function liberarWakeLock() {
+      if (wakeLock) { wakeLock.release().catch(() => { }); wakeLock = null; }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && !document.getElementById('guided').classList.contains('hidden')) {
+        solicitarWakeLock();
+      }
+    });
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      solicitarWakeLock();
+      if (!document.getElementById('guided').classList.contains('hidden') && !paused && left > 0) {
+        idleTimer = setTimeout(ativarModoEcon, 10000);
+      }
+    }
+
+    function ativarModoEcon() {
+      if (!document.getElementById('guided').classList.contains('hidden') && !paused && left > 0) {
+        document.getElementById('blackOverlay').classList.remove('hidden');
+      }
+    }
+
+    function desativarModoEcon() {
+      document.getElementById('blackOverlay').classList.add('hidden');
+      resetIdleTimer();
+    }
+
+    document.addEventListener('click', resetIdleTimer);
+    document.addEventListener('touchstart', resetIdleTimer);
+
+    const descricoes = {
+      'Aquecimento geral': '🔥 Marcha no lugar → círculos de braços → balanço de pernas → rotação de tronco.',
+      'Agachamento - 1ª Série': '🦵 Faça 12 repetições controladas. Pés na largura dos ombros.',
+      'Agachamento - 2ª Série': '🦵 Segunda série! Mantenha peito aberto e desça com controle.',
+      'Agachamento - 3ª Série': '🦵 Última série de agachamento! Mantenha a técnica perfeita.',
+      'Flexão - 1ª Série': '💪 Faça 10 repetições. Peito quase no chão. Pode usar os joelhos.',
+      'Flexão - 2ª Série': '💪 Segunda série! Mantenha o abdômen bem contraído.',
+      'Flexão - 3ª Série': '💪 Última série de flexões! Empurre o chão com firmeza.',
+      'Remada - 1ª Série': '🏋️ 12 repetições por lado com garrafas/halteres. Cotovelos junto ao corpo.',
+      'Remada - 2ª Série': '🏋️ Segunda série! Puxe o peso em direção à cintura.',
+      'Remada - 3ª Série': '🏋️ Última série! Puxe focando nas costas.',
+      'Prancha - 1ª Série': '🧱 Segure a posição por 40 segundos com abdômen travado.',
+      'Prancha - 2ª Série': '🧱 Segunda série! Respiração constante e controlada.',
+      'Prancha - 3ª Série': '🧱 Última série de prancha! Mantenha o corpo alinhado.',
+      '⏱️ Descanso': '😤 Respire fundo, tome água e recupere o fôlego.',
+      '⏱️ Troca de Exercício': '🔄 Respire e prepare a posição para o próximo exercício.',
+      '🚴 Bike — 5min Giro Leve (Aquec)': '🚴 Ritmo leve para aquecer os joelhos e aumentar o fluxo sanguíneo.',
+      '⚡ BIKE TIRO PESADO!': '⚡ AUMENTE A CARGA E PEDALE FORTE! Força máxima por 30s!',
+      '🚴 Bike Giro Leve (Recuperação)': '🚴 Baixe a carga e gire suave por 60s. Respire fundo para recuperar!',
+      '🧘 Bike — 5min Desacelerar': '🧘 Giro bem leve para desacelerar os batimentos e finalizar.',
+      '🚴 Bike LEVE 30min': '🚴 Ritmo leve e constante sem forçar. Recuperação ativa!',
+      '🧘 Alongamento pernas/core': '🧘 Foco em alongar quadríceps, posterior de coxa e lombar/core.',
+      '🧘 Alongamento + mobilidade': '🧘 Exercícios de mobilidade articular e alongamento relaxante.',
+      '🚶 Caminhada leve 25min': '🚶 Caminhada em ritmo confortável ao ar livre ou esteira.',
+      '🧘 Alongamento geral 10min': '🧘 Mobilidade e relaxamento completo para todo o corpo.'
+    };
+
+    function gerarBlocoBikeHIIT() {
+      let cfg = getSettings().bike;
+      let bloco = [['🚴 Bike — 5min Giro Leve (Aquec)', 300, true]];
+      for (let i = 1; i <= cfg.s; i++) {
+        bloco.push([`⚡ BIKE TIRO PESADO! (${i}/${cfg.s})`, cfg.t, true]);
+        bloco.push([`🚴 Bike Giro Leve (Recuperação ${i}/${cfg.s})`, cfg.l, true]);
+      }
+      bloco.push(['🧘 Bike — 5min Desacelerar', 300, true]);
+      return bloco;
+    }
+
+    function gerarBlocoUnico(nome, c) {
+      let b = [['Aquecimento geral', 180, false]];
+      for (let i = 1; i <= c.s; i++) {
+        b.push([`${nome} - ${i}ª Série`, c.t, true]);
+        if (i < c.s) b.push(['⏱️ Descanso', c.d, false]);
+      }
+      return b;
+    }
+
+    function gerarBlocoForca() {
+      let cfg = getSettings();
+      let b = [['Aquecimento geral', 180, false]];
+
+      let pushExercise = (name, c) => {
+        for (let i = 1; i <= c.s; i++) {
+          b.push([`${name} - ${i}ª Série`, c.t, true]);
+          if (i < c.s) b.push(['⏱️ Descanso', c.d, false]);
+        }
+        b.push(['⏱️ Troca de Exercício', 60, false]);
+      };
+
+      pushExercise('Agachamento', cfg.agachamento);
+      pushExercise('Flexão', cfg.flexao);
+      pushExercise('Remada', cfg.remada);
+      pushExercise('Prancha', cfg.prancha);
+
+      return b;
+    }
+
+    const plans = {
+      1: { name: '💪 SEG — Força + Bike HIIT (~49 min)', get items() { return [...gerarBlocoForca(), ...gerarBlocoBikeHIIT()] } },
+      2: {
+        name: '🚴 TER — Recuperação Ativa (~38 min)', items: [
+          ['Aquecimento geral', 180, false],
+          ['🚴 Bike LEVE 30min', 1800, false],
+          ['🧘 Alongamento pernas/core', 300, false]
+        ]
+      },
+      3: { name: '💪 QUA — Força + Bike HIIT (~49 min)', get items() { return [...gerarBlocoForca(), ...gerarBlocoBikeHIIT()] } },
+      4: {
+        name: '🚴 QUI — Recuperação Ativa (~38 min)', items: [
+          ['Aquecimento geral', 180, false],
+          ['🚴 Bike LEVE 30min', 1800, false],
+          ['🧘 Alongamento + mobilidade', 300, false]
+        ]
+      },
+      5: { name: '💪 SEX — Força + Bike HIIT (~49 min)', get items() { return [...gerarBlocoForca(), ...gerarBlocoBikeHIIT()] } },
+      6: {
+        name: '🚶 SÁB — Descanso Ativo (~40 min)', items: [
+          ['🚶 Caminhada leve 25min', 1500, false],
+          ['🧘 Alongamento geral 10min', 600, false]
+        ]
+      }
+    };
+
+    let day = new Date().getDay(), items = [], idx = 0, left = 0, paused = false, timer = null, tempoAcabou = false, endTime = 0;
+
+    function tocarBipCurto() {
+      if (!SOM_ATIVADO) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 750; o.type = 'sine';
+        g.gain.setValueAtTime(0.3, ctx.currentTime);
+        o.start(ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        o.stop(ctx.currentTime + 0.15);
+      } catch (e) { }
+      navigator.vibrate?.(100);
+    }
+
+    function tocarSomTransicao() {
+      if (!SOM_ATIVADO) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 1200; o.type = 'sine';
+        g.gain.setValueAtTime(0.5, ctx.currentTime);
+        o.start(ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+        o.stop(ctx.currentTime + 0.35);
+      } catch (e) { }
+      navigator.vibrate?.([200, 100, 200]);
+    }
+
+    function tocarSom() {
+      if (!SOM_ATIVADO) return;
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = 880; o.type = 'sine';
+        g.gain.setValueAtTime(0.4, ctx.currentTime);
+        o.start(ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        o.stop(ctx.currentTime + 0.4);
+      } catch (e) { }
+      navigator.vibrate?.([200, 150, 200]);
+    }
+
+    function show(id) {
+      document.querySelectorAll('main>section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'home') home();
+      if (id === 'progress') { history(); gerarRelatorio(); }
+      if (id === 'habits') loadHabits();
+      if (id !== 'guided') { desativarModoEcon(); liberarWakeLock(); }
+    }
+
+    function obterPesoAtual() {
+      const w = parseFloat(localStorage.getItem('weight'));
+      return Number.isFinite(w) && w > 0 ? w : 90;
+    }
+
+    function calcularMetaAgua() {
+      // Estimativa prática do app: ~32 ml/kg + ajuste pelo tipo de treino.
+      // Calor, suor e intensidade podem exigir mais. Não é prescrição médica.
+      const peso = obterPesoAtual();
+      const diaAtual = new Date().getDay();
+      let adicional = 0;
+      if ([1, 3, 5].includes(diaAtual)) adicional = 0.40;
+      else if ([2, 4].includes(diaAtual)) adicional = 0.25;
+      return Math.max(2.5, Math.min(4.2, Math.round((peso * 0.032 + adicional) * 10) / 10));
+    }
+
+    function getHabitoHoje() {
+      const hoje = new Date().toLocaleDateString('pt-BR');
+      const h = JSON.parse(localStorage.getItem('habits') || '[]');
+      return h.find(x => x.date === hoje) || null;
+    }
+
+    function atualizarDashboardAgua() {
+      const habito = getHabitoHoje();
+      const consumida = habito ? (parseFloat(habito.water) || 0) : 0;
+      const meta = calcularMetaAgua();
+      const percentual = Math.min(100, (consumida / meta) * 100);
+      const elWater = document.getElementById('homeWater');
+      const elGoal = document.getElementById('homeWaterGoal');
+      const elBar = document.getElementById('homeWaterBar');
+      const elText = document.getElementById('homeWaterText');
+      if (elWater) elWater.textContent = consumida.toFixed(2).replace('.', ',') + ' L';
+      if (elGoal) elGoal.textContent = meta.toFixed(1).replace('.', ',') + ' L';
+      if (elBar) elBar.style.width = percentual + '%';
+      if (elText) {
+        elText.innerHTML = consumida >= meta
+          ? '<span class="trend-ok">✅ Meta automática atingida.</span>'
+          : `Faltam aproximadamente ${(meta - consumida).toFixed(2).replace('.', ',')} L.`;
+      }
+      const label = document.getElementById('waterGoalLabel');
+      if (label) label.innerHTML = `💧 Água (Litros) — Meta automática: ${meta.toFixed(1).replace('.', ',')}L`;
+    }
+
+    function atualizarTendencia() {
+      const medidas = JSON.parse(localStorage.getItem('measures') || '[]');
+      const treinos = JSON.parse(localStorage.getItem('workouts') || '[]');
+      const pesos = medidas.filter(x => +x.w > 0).slice(-7);
+      const cinturas = medidas.filter(x => +x.wa > 0).slice(-7);
+      let html = '';
+
+      if (pesos.length >= 2) {
+        const delta = +pesos[pesos.length - 1].w - +pesos[0].w;
+        html += `<div class="trend-line"><span>Peso</span><b class="${delta <= 0 ? 'trend-ok' : 'trend-neutral'}">${delta > 0 ? '+' : ''}${delta.toFixed(1).replace('.', ',')} kg</b></div>`;
+      } else {
+        html += `<div class="trend-line"><span>Peso</span><b class="trend-neutral">Mais medições</b></div>`;
+      }
+
+      if (cinturas.length >= 2) {
+        const delta = +cinturas[cinturas.length - 1].wa - +cinturas[0].wa;
+        html += `<div class="trend-line"><span>Cintura</span><b class="${delta <= 0 ? 'trend-ok' : 'trend-neutral'}">${delta > 0 ? '+' : ''}${delta.toFixed(1).replace('.', ',')} cm</b></div>`;
+      } else {
+        html += `<div class="trend-line"><span>Cintura</span><b class="trend-neutral">Mais medições</b></div>`;
+      }
+
+      const hoje = new Date();
+      const limite = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() - 6);
+      const concluidos = treinos.filter(t => {
+        if (!t.date || t.status !== 'Completo ✅') return false;
+        const partes = t.date.split(' às ')[0].split('/').map(Number);
+        if (partes.length !== 3) return false;
+        const dt = new Date(partes[2], partes[1] - 1, partes[0]);
+        return dt >= limite;
+      }).length;
+      html += `<div class="trend-line"><span>Treinos concluídos · 7 dias</span><b class="trend-neutral">${concluidos}</b></div>`;
+
+      const el = document.getElementById('homeTrend');
+      if (el) el.innerHTML = html;
+    }
+
+    function home() {
+      let p = plans[day];
+      today.textContent = D[day] + ' — ' + (p ? p.name : '🛌 Descanso Total');
+      todayDesc.textContent = p ? 'Siga no seu ritmo e mantenha a constância! ✅' : 'Dia de recuperação total. Boa comida e bom sono! 😴';
+      hv.textContent = (localStorage.weight || '90') + ' kg';
+      hc.textContent = (localStorage.waist || '105') + ' cm';
+      goalbar.style.width = Math.max(0, Math.min(100, (105 - (+localStorage.waist || 105)) / 9 * 100)) + '%';
+      week.innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => `<div class="exercise ${d === day ? 'current' : ''}"><div><b>${D[d]}</b><span>${plans[d]?.name || '🛌 Descanso Total / Lazer'}</span></div><span>${d === day ? '👉' : ''}</span></div>`).join('');
+      atualizarListaPilares();
+      atualizarDashboardAgua();
+      atualizarTendencia();
+    }
+
+    let currentTreinoName = '';
+
+    function startSingle(type) {
+      let cfg = getSettings();
+      let bloco = [];
+      if (type === 'agachamento') {
+        bloco = gerarBlocoUnico('Agachamento', cfg.agachamento);
+        currentTreinoName = 'Treino Avulso: Agachamento';
+      } else if (type === 'flexao') {
+        bloco = gerarBlocoUnico('Flexão', cfg.flexao);
+        currentTreinoName = 'Treino Avulso: Flexão';
+      } else if (type === 'remada') {
+        bloco = gerarBlocoUnico('Remada', cfg.remada);
+        currentTreinoName = 'Treino Avulso: Remada';
+      } else if (type === 'prancha') {
+        bloco = gerarBlocoUnico('Prancha', cfg.prancha);
+        currentTreinoName = 'Treino Avulso: Prancha';
+      } else if (type === 'bike') {
+        bloco = gerarBlocoBikeHIIT();
+        currentTreinoName = 'Treino Avulso: Bike HIIT';
+      }
+
+      solicitarWakeLock();
+      items = bloco; idx = 0; tempoAcabou = false; show('guided'); load();
+    }
+
+    function start() {
+      if (!plans[day]) { mostrarAviso('Hoje é dia de descanso total! Aproveite para relaxar e recuperar. 🛌'); return }
+      currentTreinoName = plans[day].name;
+      solicitarWakeLock();
+      items = plans[day].items; idx = 0; tempoAcabou = false; show('guided'); load();
+    }
+
+    function load() {
+      if (idx >= items.length) { finish(); return }
+      left = items[idx][1];
+      endTime = Date.now() + left * 1000;
+      paused = false; tempoAcabou = false; lastBipSec = -1;
+      solicitarWakeLock();
+      // desativarModoEcon(); // Removido para não acordar a tela entre exercícios automáticos (ex: HIIT)
+      document.getElementById('avisoProx').style.display = 'none';
+      document.getElementById('cardTreino').classList.remove('fim-tempo');
+      phase.textContent = `ETAPA ${idx + 1} DE ${items.length}`;
+      currentTitle.textContent = items[idx][0];
+      titleEcon.textContent = items[idx][0];
+      currentInfo.textContent = left >= 60 ? `${Math.floor(left / 60)} min restantes` : `${left} seg restantes`;
+
+      let descChave = items[idx][0].split(' (')[0];
+      document.getElementById('detalheTexto').textContent = descricoes[descChave] || descricoes[items[idx][0]] || '';
+
+      renderQueue();
+      clearInterval(timer); timer = setInterval(tick, 250); renderClock();
+      resetIdleTimer();
+    }
+
+    function tick() {
+      if (paused) return;
+      let agora = Date.now();
+      left = Math.max(0, Math.ceil((endTime - agora) / 1000));
+      renderClock();
+      bar.style.width = (1 - left / items[idx][1]) * 100 + '%';
+
+      let isAuto = items[idx][2] || false;
+
+      if (left <= 5 && left > 0 && left !== lastBipSec) {
+        lastBipSec = left;
+        tocarBipCurto();
+        let proximoNome = items[idx + 1] ? items[idx + 1][0] : 'Fim';
+        let aviso = document.getElementById('avisoProx');
+        aviso.style.display = 'block';
+        aviso.innerHTML = `🚨 PREPARE-SE: <b>${proximoNome}</b> em ${left}...`;
+      }
+
+      if (left <= 0 && !tempoAcabou) {
+        if (isAuto) {
+          tocarSomTransicao();
+          idx++;
+          load();
+        } else {
+          tempoAcabou = true; clearInterval(timer); tocarSom();
+          desativarModoEcon();
+          document.getElementById('avisoProx').style.display = 'block';
+          document.getElementById('cardTreino').classList.add('fim-tempo');
+          document.getElementById('avisoProx').textContent = '🔔 TEMPO ESGOTADO! Clique PRÓXIMO!';
+          currentInfo.textContent = '✅ Tempo esgotado — PRÓXIMO pra continuar';
+        }
+      }
+    }
+
+    function renderClock() {
+      let textoTempo = fmt(left);
+      clock.textContent = textoTempo;
+      clockOverlay.textContent = textoTempo;
+    }
+
+    function fmt(s) { return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0') }
+
+    function pause() {
+      paused = !paused;
+      desativarModoEcon();
+      if (paused) {
+        clearInterval(timer);
+        clearTimeout(idleTimer);
+        liberarWakeLock();
+        currentInfo.textContent = '⏸️ PAUSADO — clique para continuar';
+      } else {
+        solicitarWakeLock();
+        endTime = Date.now() + left * 1000;
+        timer = setInterval(tick, 250);
+        currentInfo.textContent = left >= 60 ? `${Math.floor(left / 60)} min restantes` : `${left} seg restantes`;
+        resetIdleTimer();
+      }
+    }
+
+    function next() {
+      if (!tempoAcabou && left > 0) {
+        mostrarConfirmacao('Ainda há tempo! Ir para o próximo mesmo?', () => {
+          clearInterval(timer); idx++; load();
+        });
+        return;
+      }
+      clearInterval(timer); idx++; load();
+    }
+
+    function renderQueue() {
+      queue.innerHTML = items.slice(idx + 1, idx + 5).map((x, i) => `<div class="exercise"><div><b>${x[0]}</b><span>${fmt(x[1])}</span></div></div>`).join('') || '<p class="muted">Último exercício!</p>'
+    }
+
+    function finish() {
+      clearInterval(timer);
+      clearTimeout(idleTimer);
+      desativarModoEcon();
+      liberarWakeLock();
+
+      let horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      let dataAtual = new Date().toLocaleDateString('pt-BR');
+
+      let a = JSON.parse(localStorage.getItem('workouts') || '[]');
+      a.push({
+        date: dataAtual + ' às ' + horaAtual,
+        tipo: currentTreinoName || 'Treino Concluído',
+        status: 'Completo ✅'
+      });
+      localStorage.setItem('workouts', JSON.stringify(a));
+      mostrarAviso('🏆 TREINO CONCLUÍDO! Perfeitamente executado! 💪');
+      show('home');
+    }
+
+    function saveMeasure() {
+      let w = +weight.value, wa = +waist.value;
+      if (w) localStorage.weight = w; if (wa) localStorage.waist = wa;
+      let a = JSON.parse(localStorage.getItem('measures') || '[]');
+      a.push({ date: new Date().toLocaleDateString('pt-BR'), w, wa });
+      localStorage.setItem('measures', JSON.stringify(a));
+      history(); gerarRelatorio(); home();
+      updateHeaderStats();
+      mostrarAviso('📊 Medidas salvas com sucesso!');
+    }
+
+    let longPressTimer = null;
+
+    function history() {
+      let m = JSON.parse(localStorage.getItem('measures') || '[]');
+      if (m.length) {
+        let reversed = m.slice().reverse().slice(0, 3);
+        hist.innerHTML = reversed.map((x, i) => {
+          let realIdx = m.length - 1 - i;
+          return `<p data-del-type="medida" data-del-idx="${realIdx}"><b>${x.date}</b> — ${x.w || '-'} kg | ${x.wa || '-'} cm</p>`;
+        }).join('') + '<p class="hint-longpress">👆 Segure para excluir</p>';
+        setupLongPress('#hist');
+      } else {
+        hist.innerHTML = '<p class="muted">Nenhuma medida registrada ainda.</p>';
+      }
+
+      let w = JSON.parse(localStorage.getItem('workouts') || '[]');
+      if (w.length) {
+        let reversed = w.slice().reverse().slice(0, 3);
+        histTreinos.innerHTML = reversed.map((x, i) => {
+          let realIdx = w.length - 1 - i;
+          return `<p data-del-type="treino" data-del-idx="${realIdx}"><b>${x.date}</b><br><span style="color:#10b981;font-weight:bold;">${x.tipo}</span> — ${x.status}</p>`;
+        }).join('') + '<p class="hint-longpress">👆 Segure para excluir</p>';
+        setupLongPress('#histTreinos');
+      } else {
+        histTreinos.innerHTML = '<p class="muted">Nenhum treino concluído ainda. Vamos começar hoje! 💪</p>';
+      }
+    }
+
+    function setupLongPress(containerSelector) {
+      document.querySelectorAll(`${containerSelector} p[data-del-idx]`).forEach(el => {
+        function startPress(e) {
+          if (e.type === 'contextmenu') { e.preventDefault(); return; }
+          el.classList.add('pressing');
+          longPressTimer = setTimeout(() => {
+            el.classList.remove('pressing');
+            navigator.vibrate?.(50);
+            let idx = parseInt(el.dataset.delIdx);
+            let tipo = el.dataset.delType;
+            excluirRegistro(tipo, idx);
+          }, 600);
+        }
+        function cancelPress() {
+          clearTimeout(longPressTimer);
+          el.classList.remove('pressing');
+        }
+        el.addEventListener('touchstart', startPress, { passive: true });
+        el.addEventListener('touchend', cancelPress);
+        el.addEventListener('touchcancel', cancelPress);
+        el.addEventListener('touchmove', cancelPress);
+        el.addEventListener('mousedown', startPress);
+        el.addEventListener('mouseup', cancelPress);
+        el.addEventListener('mouseleave', cancelPress);
+        el.addEventListener('contextmenu', e => e.preventDefault());
+      });
+    }
+
+    function excluirRegistro(tipo, idx) {
+      if (tipo === 'treino') {
+        let w = JSON.parse(localStorage.getItem('workouts') || '[]');
+        if (idx < 0 || idx >= w.length) return;
+        let t = w[idx];
+        mostrarConfirmacao(`Excluir este treino?\n\n${t.date}\n${t.tipo}`, () => {
+          w.splice(idx, 1);
+          localStorage.setItem('workouts', JSON.stringify(w));
+          history(); gerarRelatorio();
+          mostrarAviso('🗑️ Treino excluído com sucesso!');
+        });
+      } else if (tipo === 'medida') {
+        let m = JSON.parse(localStorage.getItem('measures') || '[]');
+        if (idx < 0 || idx >= m.length) return;
+        let med = m[idx];
+        mostrarConfirmacao(`Excluir esta medida?\n\n${med.date}\nPeso: ${med.w || '-'} kg | Cintura: ${med.wa || '-'} cm`, () => {
+          m.splice(idx, 1);
+          localStorage.setItem('measures', JSON.stringify(m));
+          if (m.length > 0) {
+            let ultima = m[m.length - 1];
+            if (ultima.w) localStorage.setItem('weight', ultima.w);
+            if (ultima.wa) localStorage.setItem('waist', ultima.wa);
+          }
+          history(); gerarRelatorio(); home();
+          updateHeaderStats();
+          mostrarAviso('🗑️ Medida excluída com sucesso!');
+        });
+      } else if (tipo === 'habito') {
+        let h = JSON.parse(localStorage.getItem('habits') || '[]');
+        if (idx < 0 || idx >= h.length) return;
+        let hab = h[idx];
+        mostrarConfirmacao(`Excluir hábito deste dia?\n\n${hab.date}\n💧 ${hab.water || 0}L | 🍺 ${hab.alcohol || 0}`, () => {
+          h.splice(idx, 1);
+          localStorage.setItem('habits', JSON.stringify(h));
+          renderHabitsHistory(); gerarRelatorio();
+          mostrarAviso('🗑️ Hábito excluído com sucesso!');
+        });
+      }
+    }
+    function addAgua(qtd) {
+      let campo = document.getElementById('water');
+      let atual = parseFloat(campo.value) || 0;
+      let novoTotal = Math.round((atual + qtd) * 100) / 100;
+      campo.value = novoTotal;
+      saveHabits(true);
+    }
+
+    function addCerveja(qtd) {
+      let campo = document.getElementById('alcohol');
+      let atual = parseInt(campo.value) || 0;
+      let novoTotal = Math.max(0, atual + qtd);
+      campo.value = novoTotal;
+      saveHabits(true);
+    }
+
+    function saveHabits(silencioso = false) {
+      let w = parseFloat(document.getElementById('water').value) || 0;
+      let a = parseInt(document.getElementById('alcohol').value) || 0;
+      let f = document.getElementById('fast').checked;
+
+      let dataAtual = new Date().toLocaleDateString('pt-BR');
+      let h = JSON.parse(localStorage.getItem('habits') || '[]');
+
+      let indexHoje = h.findIndex(item => item.date === dataAtual);
+      if (indexHoje !== -1) {
+        h[indexHoje] = { date: dataAtual, water: w, alcohol: a, fast: f };
+      } else {
+        h.push({ date: dataAtual, water: w, alcohol: a, fast: f });
+      }
+
+      localStorage.setItem('habits', JSON.stringify(h));
+      renderHabitsHistory();
+      gerarRelatorio();
+      if (!silencioso) { mostrarAviso('💧 Hábitos salvos com sucesso!'); }
+    }
+
+    function renderHabitsHistory() {
+      let h = JSON.parse(localStorage.getItem('habits') || '[]');
+      let container = document.getElementById('histHabits');
+      if (!container) return;
+      if (h.length) {
+        let reversed = h.slice().reverse().slice(0, 3);
+        container.innerHTML = reversed.map((x, i) => {
+          let realIdx = h.length - 1 - i;
+          return `<p data-del-type="habito" data-del-idx="${realIdx}">
+        <b>${x.date}</b><br>
+        💧 Água: <b>${x.water || 0} L</b> | 🍺 Cerveja: <b>${x.alcohol || 0} un</b> | 🚴 Jejum: <b>${x.fast ? 'Sim ✅' : 'Não ❌'}</b>
+      </p>`;
+        }).join('') + '<p class="hint-longpress">👆 Segure para excluir</p>';
+        setupLongPress('#histHabits');
+      } else {
+        container.innerHTML = '<p class="muted">Nenhum hábito registrado em dias anteriores.</p>';
+      }
+    }
+
+    function loadHabits() {
+      let dataAtual = new Date().toLocaleDateString('pt-BR');
+      let h = JSON.parse(localStorage.getItem('habits') || '[]');
+      let hoje = h.find(item => item.date === dataAtual);
+
+      if (hoje) {
+        document.getElementById('water').value = hoje.water || '';
+        document.getElementById('alcohol').value = hoje.alcohol || '';
+        document.getElementById('fast').checked = hoje.fast !== undefined ? hoje.fast : true;
+      }
+      renderHabitsHistory();
+    }
+
+    function formatInputDate(yyyy_mm_dd) {
+      if (!yyyy_mm_dd) return '';
+      const [y, m, d] = yyyy_mm_dd.split('-');
+      return `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
+    }
+
+    function gerarRelatorio() {
+      const inputEl = document.getElementById('reportDate');
+      const dataFiltro = inputEl && inputEl.value ? formatInputDate(inputEl.value) : null;
+
+      const workouts = JSON.parse(localStorage.getItem('workouts') || '[]');
+      const habits = JSON.parse(localStorage.getItem('habits') || '[]');
+      const measures = JSON.parse(localStorage.getItem('measures') || '[]');
+
+      let datasSet = new Set();
+
+      workouts.forEach(w => {
+        let d = w.date ? w.date.split(' às ')[0] : '';
+        if (d) datasSet.add(d);
+      });
+      habits.forEach(h => { if (h.date) datasSet.add(h.date); });
+      measures.forEach(m => { if (m.date) datasSet.add(m.date); });
+
+      let datasArray = Array.from(datasSet);
+
+      datasArray.sort((a, b) => {
+        let [dA, mA, yA] = a.split('/').map(Number);
+        let [dB, mB, yB] = b.split('/').map(Number);
+        return new Date(yB, mB - 1, dB) - new Date(yA, mA - 1, dA);
+      });
+
+      if (dataFiltro) {
+        datasArray = datasArray.filter(d => d === dataFiltro);
+      }
+
+      const container = document.getElementById('relatorioResultado');
+      if (!container) return;
+
+      if (datasArray.length === 0) {
+        container.innerHTML = '<p class="muted">Nenhum registro encontrado para a data selecionada.</p>';
+        window.ultimoRelatorioTexto = "";
+
+        function getSettings() {
+          let def = {
+            agachamento: { s: 3, r: 12, t: 40, d: 45 },
+            flexao: { s: 3, r: 10, t: 40, d: 45 },
+            remada: { s: 3, r: 12, t: 50, d: 45 },
+            prancha: { s: 3, r: 40, t: 40, d: 40 },
+            bike: { s: 10, t: 30, l: 60 }
+          };
+          let saved = JSON.parse(localStorage.getItem('workout_config') || '{}');
+          for (let k in saved) { if (def[k]) Object.assign(def[k], saved[k]); }
+          return def;
+        }
+
+        function abrirConfig() {
+          let cfg = getSettings();
+          let html = '';
+          let exercises = {
+            agachamento: '🦵 Agachamento', flexao: '💪 Flexão',
+            remada: '🏋️ Remada', prancha: '🧱 Prancha', bike: '🚴 Bike HIIT'
+          };
+
+          for (let k in exercises) {
+            let c = cfg[k];
+            html += `<div style="margin-bottom:15px; border-bottom:1px solid #e2e8f0; padding-bottom:10px;">
+          <b>${exercises[k]}</b>
+          <div class="row" style="margin-top:5px;">
+            <input type="number" id="cfg_${k}_s" value="${c.s}" placeholder="Séries" title="Séries">
+            ${k !== 'bike' ? `<input type="number" id="cfg_${k}_r" value="${c.r}" placeholder="Reps/s" title="Repetições">` : ''}
+          </div>
+          <div class="row" style="margin-top:5px;">
+            <input type="number" id="cfg_${k}_t" value="${c.t}" placeholder="Trabalho (s)" title="Tempo de Trabalho (s)">
+            <input type="number" id="cfg_${k}_${k === 'bike' ? 'l' : 'd'}" value="${k === 'bike' ? c.l : c.d}" placeholder="Descanso (s)" title="Tempo de Descanso (s)">
+          </div>
+        </div>`;
+          }
+          document.getElementById('configFields').innerHTML = html;
+          document.getElementById('modalConfigTreino').classList.remove('hidden');
+        }
+
+        function fecharConfig() { document.getElementById('modalConfigTreino').classList.add('hidden'); }
+
+        function salvarConfig() {
+          let cfg = getSettings();
+          let exercises = ['agachamento', 'flexao', 'remada', 'prancha', 'bike'];
+          for (let k of exercises) {
+            cfg[k].s = +document.getElementById(`cfg_${k}_s`).value;
+            cfg[k].t = +document.getElementById(`cfg_${k}_t`).value;
+            if (k === 'bike') {
+              cfg[k].l = +document.getElementById(`cfg_bike_l`).value;
+            } else {
+              cfg[k].r = +document.getElementById(`cfg_${k}_r`).value;
+              cfg[k].d = +document.getElementById(`cfg_${k}_d`).value;
+            }
+          }
+          localStorage.setItem('workout_config', JSON.stringify(cfg));
+          fecharConfig();
+          atualizarListaPilares();
+          mostrarAviso('✅ Configurações salvas!');
+        }
+
+        function atualizarListaPilares() {
+          let cfg = getSettings();
+          let elAg = document.getElementById('lbl-agachamento'); if (elAg) elAg.textContent = `${cfg.agachamento.s}×${cfg.agachamento.r}`;
+          let elFl = document.getElementById('lbl-flexao'); if (elFl) elFl.textContent = `${cfg.flexao.s}×${cfg.flexao.r}`;
+          let elRe = document.getElementById('lbl-remada'); if (elRe) elRe.textContent = `${cfg.remada.s}×${cfg.remada.r}/lado`;
+          let elPr = document.getElementById('lbl-prancha'); if (elPr) elPr.textContent = `${cfg.prancha.s}×${cfg.prancha.r}s`;
+          let elBi = document.getElementById('lbl-bike'); if (elBi) elBi.textContent = `${cfg.bike.s}x (${cfg.bike.t}s Tiro / ${cfg.bike.l}s Leve)`;
+        }
+
+        return;
+      }
+
+      let html = '';
+      let textoExportacao = '📊 RELATÓRIO DE SAÚDE E TREINO\n\n';
+
+      datasArray.forEach(d => {
+        const treinosDoDia = workouts.filter(w => w.date && w.date.startsWith(d));
+        const habitoDoDia = habits.find(h => h.date === d);
+        const medidaDoDia = measures.find(m => m.date === d);
+
+        textoExportacao += `📅 DATA: ${d}\n`;
+        html += `<div style="border-left: 4px solid #10b981; padding-left: 10px; margin-bottom: 16px;">`;
+        html += `<h3 style="margin: 0 0 6px 0; font-size: 15px; color: #111827;">📅 ${d}</h3>`;
+
+        if (treinosDoDia.length > 0) {
+          html += `<p style="margin: 3px 0; font-size: 13px;"><b>🏋️ Treinos:</b></p><ul style="margin: 2px 0 6px 18px; padding: 0; font-size: 13px;">`;
+          treinosDoDia.forEach(t => {
+            let hora = t.date.includes('às') ? t.date.split('às')[1].trim() : '';
+            html += `<li>${t.tipo} ${hora ? '(' + hora + ')' : ''} — ${t.status}</li>`;
+            textoExportacao += `  🏋️ Treino: ${t.tipo} ${hora ? '(' + hora + ')' : ''} - ${t.status}\n`;
+          });
+          html += `</ul>`;
+        } else {
+          html += `<p style="margin: 3px 0; font-size: 13px; color: #64748b;">🏋️ Treino: Nenhum registrado</p>`;
+          textoExportacao += `  🏋️ Treino: Nenhum registrado\n`;
+        }
+
+        if (habitoDoDia) {
+          html += `<p style="margin: 3px 0; font-size: 13px;">💧 <b>Água:</b> ${habitoDoDia.water || 0} L | 🍺 <b>Cerveja:</b> ${habitoDoDia.alcohol || 0} un | 🚴 <b>Jejum:</b> ${habitoDoDia.fast ? 'Sim ✅' : 'Não ❌'}</p>`;
+          textoExportacao += `  💧 Água: ${habitoDoDia.water || 0} L\n  🍺 Cerveja: ${habitoDoDia.alcohol || 0} un\n  🚴 Jejum: ${habitoDoDia.fast ? 'Sim' : 'Não'}\n`;
+        } else {
+          html += `<p style="margin: 3px 0; font-size: 13px; color: #64748b;">🍽️ Hábitos: Não registrados</p>`;
+          textoExportacao += `  🍽️ Hábitos: Não registrados\n`;
+        }
+
+        if (medidaDoDia) {
+          html += `<p style="margin: 3px 0; font-size: 13px;">📏 <b>Medidas:</b> Peso: ${medidaDoDia.w || '-'} kg | Cintura: ${medidaDoDia.wa || '-'} cm</p>`;
+          textoExportacao += `  📏 Peso: ${medidaDoDia.w || '-'} kg | Cintura: ${medidaDoDia.wa || '-'} cm\n`;
+        }
+
+        html += `</div>`;
+        textoExportacao += `-----------------------------------\n`;
+      });
+
+      container.innerHTML = html;
+      window.ultimoRelatorioTexto = textoExportacao;
+    }
+
+    function copiarRelatorio() {
+      if (!window.ultimoRelatorioTexto) {
+        mostrarAviso('Gere o relatório primeiro!');
+        return;
+      }
+      navigator.clipboard.writeText(window.ultimoRelatorioTexto).then(() => {
+        mostrarAviso('📋 Relatório copiado com sucesso para a área de transferência!');
+      }).catch(() => {
+        mostrarAviso('Não foi possível copiar automaticamente.');
+      });
+    }
+
+    function limparFiltroRelatorio() {
+      document.getElementById('reportDate').value = '';
+      gerarRelatorio();
+    }
+
+    /* --- BACKUP E RESTAURAÇÃO --- */
+    function mostrarBackupModal() {
+      document.getElementById('backupModal').classList.remove('hidden');
+    }
+    function fecharBackupModal() {
+      document.getElementById('backupModal').classList.add('hidden');
+    }
+    function exportarBackup() {
+      const data = {
+        workouts: JSON.parse(localStorage.getItem('workouts') || '[]'),
+        measures: JSON.parse(localStorage.getItem('measures') || '[]'),
+        habits: JSON.parse(localStorage.getItem('habits') || '[]'),
+        weight: localStorage.getItem('weight') || '',
+        waist: localStorage.getItem('waist') || ''
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'backup-5essenciais-' + new Date().toISOString().slice(0, 10) + '.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      fecharBackupModal();
+      mostrarAviso('💾 Backup exportado com sucesso!');
+    }
+    function importarBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (data.workouts) localStorage.setItem('workouts', JSON.stringify(data.workouts));
+          if (data.measures) localStorage.setItem('measures', JSON.stringify(data.measures));
+          if (data.habits) localStorage.setItem('habits', JSON.stringify(data.habits));
+          if (data.weight) localStorage.setItem('weight', data.weight);
+          if (data.waist) localStorage.setItem('waist', data.waist);
+          home(); history(); gerarRelatorio();
+          fecharBackupModal();
+          mostrarAviso('✅ Dados restaurados com sucesso!');
+        } catch (err) {
+          fecharBackupModal();
+          mostrarAviso('❌ Erro ao ler o arquivo de backup. Verifique se é um JSON válido.');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function checkInitialSetup() {
+      if (!localStorage.getItem('userHeight') || !localStorage.getItem('userAge')) {
+        document.getElementById('modalText').innerHTML = `
+      Bem-vindo! Vamos configurar seu perfil.<br><br>
+      <input type="number" id="setupHeight" placeholder="Altura (cm)" style="margin-bottom:10px;">
+      <input type="number" id="setupAge" placeholder="Idade (anos)" style="margin-bottom:10px;">
+      <input type="number" id="setupWeight" step="0.1" placeholder="Peso Atual (kg)" style="margin-bottom:10px;">
+      <div style="font-size:13px;color:#64748b;text-align:left;">💧 A meta de água será calculada automaticamente pelo peso e pelo tipo de treino do dia.</div>
+    `;
+        document.getElementById('modalButtons').innerHTML = `
+      <button class="btn-modal-ok" onclick="saveInitialSetup()">Salvar</button>
+    `;
+        document.getElementById('customModal').classList.remove('hidden');
+      } else {
+        updateHeaderStats();
+      }
+    }
+
+    function saveInitialSetup() {
+      let h = document.getElementById('setupHeight').value;
+      let a = document.getElementById('setupAge').value;
+      let w = document.getElementById('setupWeight').value;
+      let wg = document.getElementById('setupWaterGoal') ? document.getElementById('setupWaterGoal').value : '';
+
+      if (h) localStorage.setItem('userHeight', h);
+      if (a) localStorage.setItem('userAge', a);
+      if (w) localStorage.setItem('weight', w);
+      if (wg) localStorage.setItem('waterGoal', wg);
+
+      fecharModal();
+      updateHeaderStats();
+      home();
+    }
+
+    function updateHeaderStats() {
+      let w = localStorage.getItem('weight') || '--';
+      let h = localStorage.getItem('userHeight') || '--';
+      let a = localStorage.getItem('userAge') || '--';
+      let wg = calcularMetaAgua();
+      document.getElementById('headerStats').innerHTML = `🦵Agach 💪Flex 🏋️Rem 🧱Pran 🚴Bike HIIT | ${w}kg·${h}cm·${a}a·${wg.toFixed(1).replace('.', ',')}L`;
+
+      let labelAgua = document.getElementById('waterGoalLabel');
+      if (labelAgua) labelAgua.innerHTML = `💧 Água (Litros) — Meta automática: ${wg.toFixed(1).replace('.', ',')}L`;
+    }
+
+    home(); history();
+    checkInitialSetup();
+  </script>
+</body>
+
+</html>
